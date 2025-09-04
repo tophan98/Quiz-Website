@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C Programming Quiz</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #283c86, #45a247);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    }
+
+    #quiz-container {
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 20px;
+      border-radius: 14px;
+      margin: 18px 0;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+      transition: 0.3s ease;
+    }
+
+    .question:hover {
+      transform: translateY(-3px);
+    }
+
+    .question p {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+    }
+
+    .options label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .options label:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 25px;
+      padding: 15px 35px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #dd2476, #ff512f);
+      transform: translateY(-3px);
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .correct {
+      color: #00ff99;
+    }
+
+    .wrong {
+      color: #ff4c4c;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚡ C Programming Quiz</h1>
+  <div id="quiz-container"></div>
+  <button class="submit-btn" onclick="submitQuiz()">Submit</button>
+  <div id="result"></div>
+
+  <script>
+    // ✅ C Programming Questions Pool (50 questions)
+    const questions = [
+      { q: "Which of the following is a valid C variable name?", options: ["int number;", "float value;", "_total", "2value"], answer: 2 },
+      { q: "Which symbol is used to denote a preprocessor directive in C?", options: ["$", "#", "@", "&"], answer: 1 },
+      { q: "What is the default return type of functions in C?", options: ["void", "int", "float", "char"], answer: 1 },
+      { q: "Which header file is required for printf() and scanf()?", options: ["conio.h", "stdlib.h", "stdio.h", "math.h"], answer: 2 },
+      { q: "Which of the following is not a valid storage class in C?", options: ["auto", "register", "volatile", "static"], answer: 2 },
+      { q: "Which operator is used to access value at an address?", options: ["&", "*", "->", "."], answer: 1 },
+      { q: "Which keyword is used to define a constant in C?", options: ["final", "const", "constant", "define"], answer: 1 },
+      { q: "Which loop is guaranteed to execute at least once?", options: ["for", "while", "do-while", "none"], answer: 2 },
+      { q: "Which data type is usually 1 byte in C?", options: ["int", "float", "char", "double"], answer: 2 },
+      { q: "Which operator is used for modulo operation?", options: ["%", "/", "//", "mod"], answer: 0 },
+      { q: "Which function is used to allocate memory in C?", options: ["malloc()", "calloc()", "realloc()", "All of the above"], answer: 3 },
+      { q: "What is the index of the first element in an array in C?", options: ["0", "1", "-1", "Depends on compiler"], answer: 0 },
+      { q: "What is the size of int on a 32-bit system?", options: ["2 bytes", "4 bytes", "8 bytes", "Depends on compiler"], answer: 1 },
+      { q: "What is used to terminate a string in C?", options: ["\\0", "NULL", "end", "stop"], answer: 0 },
+      { q: "Which function is used to compare two strings in C?", options: ["strcpy()", "strcmp()", "strlen()", "strcat()"], answer: 1 },
+      { q: "Which keyword is used to exit from a loop?", options: ["continue", "exit", "break", "stop"], answer: 2 },
+      { q: "Which function is used to generate random numbers in C?", options: ["rand()", "random()", "srand()", "genRand()"], answer: 0 },
+      { q: "Which operator has the highest precedence in C?", options: ["++", "*", "()", "&&"], answer: 2 },
+      { q: "Which keyword is used to create a structure in C?", options: ["struct", "class", "define", "record"], answer: 0 },
+      { q: "Which keyword is used to return control from a function?", options: ["exit", "break", "return", "end"], answer: 2 },
+      // 🔥 Add up to 50 similar C questions
+    ];
+
+    // ✅ Pick 10 Random Questions
+    const selected = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    const quizContainer = document.getElementById("quiz-container");
+
+    selected.forEach((q, index) => {
+      let html = `<div class="question">
+        <p>${index + 1}. ${q.q}</p>
+        <div class="options">`;
+
+      q.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+      });
+
+      html += `</div></div>`;
+      quizContainer.innerHTML += html;
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      let resultHTML = "<h2>Your Results:</h2>";
+
+      selected.forEach((q, index) => {
+        const answer = document.querySelector(`input[name="q${index}"]:checked`);
+        if (answer && parseInt(answer.value) === q.answer) {
+          score++;
+          resultHTML += `<p class="correct">✔ ${index + 1}. ${q.q} — Correct</p>`;
+        } else {
+          resultHTML += `<p class="wrong">✘ ${index + 1}. ${q.q} — Correct Answer: ${q.options[q.answer]}</p>`;
+        }
+      });
+
+      document.getElementById("result").innerHTML =
+        `🎉 You scored ${score} / ${selected.length}<br>` + resultHTML;
+    }
+  </script>
+</body>
+</html>
