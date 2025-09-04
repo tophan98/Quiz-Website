@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHP Quiz</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+      animation: fadeInDown 1s ease;
+    }
+
+    #quiz-container {
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 20px;
+      border-radius: 14px;
+      margin: 18px 0;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+      transition: 0.3s ease;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .question:hover {
+      transform: translateY(-3px);
+    }
+
+    .question p {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+    }
+
+    .options label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .options label:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 25px;
+      padding: 15px 35px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      animation: fadeInUp 1s ease;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #dd2476, #ff512f);
+      transform: translateY(-3px);
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.3);
+      animation: fadeIn 1s ease;
+    }
+
+    .correct { color: #00ff99; }
+    .wrong { color: #ff4c4c; }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1>🐘 PHP Quiz</h1>
+  <div id="quiz-container"></div>
+  <button class="submit-btn" onclick="submitQuiz()">Submit</button>
+  <div id="result"></div>
+
+  <script>
+    // ✅ 50 PHP Questions
+    const questions = [
+      { q: "What does PHP stand for?", options: ["Personal Home Page", "PHP: Hypertext Preprocessor", "Private Home Page", "Public Hosting Platform"], answer: 1 },
+      { q: "Which symbol is used to declare variables in PHP?", options: ["#", "$", "&", "@"], answer: 1 },
+      { q: "Which function is used to output text in PHP?", options: ["echo()", "print()", "console.log()", "Both echo() and print()"], answer: 3 },
+      { q: "PHP files have the extension?", options: [".html", ".ph", ".php", ".phtml"], answer: 2 },
+      { q: "Which version of PHP introduced PDO?", options: ["PHP 4", "PHP 5.1", "PHP 7", "PHP 8"], answer: 1 },
+      { q: "Which of the following is a PHP loop?", options: ["for", "foreach", "while", "All of these"], answer: 3 },
+      { q: "Which function is used to connect to a MySQL database in PHP?", options: ["mysqli_connect()", "mysql_connect()", "pdo_connect()", "connect()"], answer: 0 },
+      { q: "Which function starts a session in PHP?", options: ["session()", "session_start()", "start_session()", "init_session()"], answer: 1 },
+      { q: "Which superglobal variable is used to collect form data in PHP (method=post)?", options: ["$_GET", "$_POST", "$_REQUEST", "$_FORM"], answer: 1 },
+      { q: "Which operator is used for concatenation in PHP?", options: ["+", ".", "&", ","], answer: 1 },
+      { q: "Which function is used to get the length of a string in PHP?", options: ["len()", "count()", "strlen()", "size()"], answer: 2 },
+      { q: "What is the default file extension for PHP files?", options: [".php", ".phtml", ".phps", ".html"], answer: 0 },
+      { q: "Which function is used to include one PHP file into another?", options: ["require()", "include()", "import()", "Both require() and include()"], answer: 3 },
+      { q: "Which superglobal contains cookie values?", options: ["$_COOKIE", "$_SESSION", "$_GET", "$_ENV"], answer: 0 },
+      { q: "What is the correct way to end a PHP statement?", options: [".", ":", ";", ","], answer: 2 },
+      { q: "Which function is used to check if a variable is set in PHP?", options: ["isset()", "empty()", "defined()", "varset()"], answer: 0 },
+      { q: "Which function is used to destroy a session in PHP?", options: ["session_destroy()", "unset()", "session_delete()", "end_session()"], answer: 0 },
+      { q: "Which keyword is used to define a class in PHP?", options: ["define", "object", "class", "function"], answer: 2 },
+      { q: "Which magic method is called when an object is created?", options: ["__construct()", "__destruct()", "__init()", "__new()"], answer: 0 },
+      { q: "Which function is used to read a file into a string in PHP?", options: ["file_get_contents()", "read_file()", "fopen()", "file_read()"], answer: 0 },
+      { q: "Which superglobal contains server information?", options: ["$_ENV", "$_SERVER", "$_GLOBAL", "$_REQUEST"], answer: 1 },
+      { q: "Which keyword is used to inherit a class in PHP?", options: ["implements", "extends", "inherits", "super"], answer: 1 },
+      { q: "Which operator is used for equality check in PHP?", options: ["==", "===", "=", "!="], answer: 0 },
+      { q: "Which operator is used for strict comparison in PHP?", options: ["==", "===", "=", "<>"], answer: 1 },
+      { q: "Which function is used to count array elements in PHP?", options: ["count()", "sizeof()", "length()", "Both count() and sizeof()"], answer: 3 },
+      { q: "Which PHP function is used to hash a string?", options: ["md5()", "hash()", "sha1()", "All of these"], answer: 3 },
+      { q: "Which error type is non-recoverable in PHP?", options: ["E_NOTICE", "E_WARNING", "E_ERROR", "E_PARSE"], answer: 2 },
+      { q: "Which function returns the current date in PHP?", options: ["date()", "time()", "now()", "get_date()"], answer: 0 },
+      { q: "Which PHP statement is used to stop script execution?", options: ["stop", "break", "exit", "end"], answer: 2 },
+      { q: "Which function is used to get the type of a variable?", options: ["gettype()", "typeof()", "var_type()", "type()"], answer: 0 },
+      { q: "Which constant is used to get PHP version?", options: ["PHP_VERSION", "PHP_VER", "VERSION", "PHP"], answer: 0 },
+      { q: "Which function is used to sort an array in ascending order?", options: ["sort()", "asort()", "ksort()", "rsort()"], answer: 0 },
+      { q: "Which function is used to sort an array in descending order?", options: ["rsort()", "arsort()", "dsort()", "ksort()"], answer: 0 },
+      { q: "Which superglobal stores uploaded file info?", options: ["$_FILE", "$_FILES", "$_UPLOAD", "$_DOCS"], answer: 1 },
+      { q: "Which PHP version introduced namespaces?", options: ["PHP 4", "PHP 5.3", "PHP 7", "PHP 8"], answer: 1 },
+      { q: "Which function is used to remove whitespace from both sides of a string?", options: ["trim()", "strip()", "remove()", "clear()"], answer: 0 },
+      { q: "Which function is used to convert JSON to PHP array?", options: ["json_decode()", "json_encode()", "decode_json()", "parse_json()"], answer: 0 },
+      { q: "Which function is used to convert PHP array to JSON?", options: ["json_encode()", "json_decode()", "array_to_json()", "encode_json()"], answer: 0 },
+      { q: "Which function is used to open a file in PHP?", options: ["fopen()", "file_open()", "open()", "open_file()"], answer: 0 },
+      { q: "Which function is used to close a file in PHP?", options: ["fclose()", "file_close()", "close()", "end()"], answer: 0 },
+      { q: "Which function is used to check if a file exists?", options: ["file_exists()", "exists()", "is_file()", "check_file()"], answer: 0 },
+      { q: "Which function is used to get an array of files in a directory?", options: ["scandir()", "dir()", "listdir()", "readdir()"], answer: 0 },
+      { q: "Which function is used to suppress errors in PHP?", options: ["@", "!", "#", "&"], answer: 0 },
+      { q: "Which function is used to redirect to another page?", options: ["header()", "redirect()", "location()", "goto()"], answer: 0 },
+      { q: "Which function is used to encrypt data in PHP?", options: ["openssl_encrypt()", "encrypt()", "md5()", "hash_encrypt()"], answer: 0 },
+      { q: "Which function is used to decrypt data in PHP?", options: ["openssl_decrypt()", "decrypt()", "hash_decrypt()", "decode()"], answer: 0 },
+      { q: "Which error is thrown when a variable is undefined?", options: ["E_NOTICE", "E_WARNING", "E_ERROR", "E_PARSE"], answer: 0 },
+      { q: "Which function is used to send emails in PHP?", options: ["send_mail()", "mail()", "email()", "smtp_send()"], answer: 1 },
+      { q: "Which function is used to get environment variables?", options: ["getenv()", "env()", "$_ENV", "Both getenv() and $_ENV"], answer: 3 },
+      { q: "Which PHP framework is most popular?", options: ["Laravel", "Symfony", "CodeIgniter", "Zend"], answer: 0 }
+    ];
+
+    // ✅ Pick 10 Random Questions
+    const selected = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    const quizContainer = document.getElementById("quiz-container");
+
+    selected.forEach((q, index) => {
+      let html = `<div class="question">
+        <p>${index + 1}. ${q.q}</p>
+        <div class="options">`;
+
+      q.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+      });
+
+      html += `</div></div>`;
+      quizContainer.innerHTML += html;
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      let resultHTML = "<h2>Your Results:</h2>";
+
+      selected.forEach((q, index) => {
+        const answer = document.querySelector(`input[name="q${index}"]:checked`);
+        if (answer && parseInt(answer.value) === q.answer) {
+          score++;
+          resultHTML += `<p class="correct">✔ ${index + 1}. ${q.q} — Correct</p>`;
+        } else {
+          resultHTML += `<p class="wrong">✘ ${index + 1}. ${q.q} — Correct Answer: ${q.options[q.answer]}</p>`;
+        }
+      });
+
+      document.getElementById("result").innerHTML =
+        `🎉 You scored ${score} / ${selected.length}<br>` + resultHTML;
+    }
+  </script>
+</body>
+</html>
