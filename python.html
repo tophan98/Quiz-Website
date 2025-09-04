@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Quiz</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    }
+
+    #quiz-container {
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 20px;
+      border-radius: 14px;
+      margin: 18px 0;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+      transition: 0.3s ease;
+    }
+
+    .question:hover {
+      transform: translateY(-3px);
+    }
+
+    .question p {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+    }
+
+    .options label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .options label:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 25px;
+      padding: 15px 35px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #0072ff, #00c6ff);
+      transform: translateY(-3px);
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .correct {
+      color: #00ff99;
+    }
+
+    .wrong {
+      color: #ff4c4c;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐍 Python Quiz</h1>
+  <div id="quiz-container"></div>
+  <button class="submit-btn" onclick="submitQuiz()">Submit</button>
+  <div id="result"></div>
+
+  <script>
+    // ✅ Python Question Pool (50 questions)
+    const questions = [
+      { q: "Who developed Python Programming Language?", options: ["Wick van Rossum", "Rasmus Lerdorf", "Guido van Rossum", "Niene Stom"], answer: 2 },
+      { q: "In which year was Python first released?", options: ["1989", "1991", "2000", "2016"], answer: 1 },
+      { q: "Python is ___ language?", options: ["Compiled", "Interpreted", "Assembly", "Machine"], answer: 1 },
+      { q: "Which of the following is a Python data type?", options: ["int", "list", "tuple", "All of the above"], answer: 3 },
+      { q: "What is the output of print(2**3)?", options: ["6", "8", "9", "Error"], answer: 1 },
+      { q: "Which keyword is used for function in Python?", options: ["func", "define", "def", "function"], answer: 2 },
+      { q: "Which operator is used for floor division?", options: ["/", "//", "%", "**"], answer: 1 },
+      { q: "Which function returns the length of a string?", options: ["count()", "len()", "length()", "size()"], answer: 1 },
+      { q: "Default value of an uninitialized variable?", options: ["0", "None", "Null", "Undefined"], answer: 1 },
+      { q: "Which keyword is used for loop?", options: ["for", "loop", "iterate", "repeat"], answer: 0 },
+      { q: "Which is immutable?", options: ["List", "Tuple", "Dictionary", "Set"], answer: 1 },
+      { q: "Function to convert string to int?", options: ["int()", "float()", "str()", "ord()"], answer: 0 },
+      { q: "Output of print(9//2)?", options: ["4.5", "4", "5", "Error"], answer: 2 },
+      { q: "File extension for Python?", options: [".pyth", ".pt", ".py", ".p"], answer: 2 },
+      { q: "Which keyword handles exceptions?", options: ["try-except", "do-catch", "error-catch", "handle"], answer: 0 },
+      { q: "Symbol for comments in Python?", options: ["//", "#", "/* */", "<!-- -->"], answer: 1 },
+      { q: "Function for user input?", options: ["get()", "input()", "scan()", "read()"], answer: 1 },
+      { q: "Operator for exponentiation?", options: ["^", "**", "//", "exp()"], answer: 1 },
+      { q: "Which is not a keyword?", options: ["pass", "eval", "assert", "nonlocal"], answer: 1 },
+      { q: "Convert int to string?", options: ["int()", "str()", "ord()", "chr()"], answer: 1 },
+      { q: "Mutable data type?", options: ["Tuple", "String", "List", "int"], answer: 2 },
+      { q: "Keyword to define a class?", options: ["define", "class", "object", "struct"], answer: 1 },
+      { q: "Add item to a list?", options: ["add()", "append()", "insert()", "extend()"], answer: 1 },
+      { q: "Remove last item of a list?", options: ["remove()", "del()", "pop()", "clear()"], answer: 2 },
+      { q: "Function finds max value?", options: ["maximum()", "max()", "largest()", "big()"], answer: 1 },
+      { q: "Keyword to inherit a class?", options: ["extends", "inherits", "super", "class"], answer: 2 },
+      { q: "Which module for math functions?", options: ["math", "cmath", "numbers", "random"], answer: 0 },
+      { q: "Function for absolute value?", options: ["fabs()", "abs()", "absolute()", "math.abs()"], answer: 1 },
+      { q: "Method splits a string?", options: ["cut()", "split()", "divide()", "partition()"], answer: 1 },
+      { q: "Keyword to exit a loop?", options: ["stop", "exit", "break", "end"], answer: 2 },
+      { q: "Function finds smallest value?", options: ["small()", "min()", "minimum()", "low()"], answer: 1 },
+      { q: "Keyword creates generator?", options: ["yield", "return", "gen", "generate"], answer: 0 },
+      { q: "Output of bool(0)?", options: ["True", "False", "0", "None"], answer: 1 },
+      { q: "Operator for membership?", options: ["in", "has", "contains", "within"], answer: 0 },
+      { q: "Module for random numbers?", options: ["random", "math", "numbers", "rand"], answer: 0 },
+      { q: "Method returns uppercase string?", options: ["upper()", "uppercase()", "toUpper()", "capital()"], answer: 0 },
+      { q: "Method returns lowercase string?", options: ["lower()", "tolower()", "downcase()", "case()"], answer: 0 },
+      { q: "Function to open files?", options: ["file()", "open()", "read()", "io()"], answer: 1 },
+      { q: "Method reads all lines from file?", options: ["readlines()", "read()", "lines()", "getlines()"], answer: 0 },
+      { q: "Statement for no action?", options: ["none", "null", "pass", "continue"], answer: 2 },
+      { q: "Method removes whitespace?", options: ["trim()", "strip()", "cut()", "rstrip()"], answer: 1 },
+      { q: "Function returns ASCII of char?", options: ["ord()", "ascii()", "char()", "chr()"], answer: 0 },
+      { q: "Function returns char from ASCII?", options: ["ascii()", "ord()", "chr()", "char()"], answer: 2 },
+      { q: "Which module for date & time?", options: ["datetime", "time", "calendar", "All of the above"], answer: 3 },
+      { q: "Keyword for lambda functions?", options: ["def", "lambda", "function", "fun"], answer: 1 },
+      { q: "Method returns index of substring?", options: ["find()", "search()", "index()", "locate()"], answer: 0 },
+      { q: "Exception for division by zero?", options: ["ValueError", "ZeroDivisionError", "ArithmeticError", "RuntimeError"], answer: 1 },
+      { q: "Which loop runs at least once?", options: ["for", "while", "do-while", "None"], answer: 3 },
+      { q: "Keyword for global variable?", options: ["global", "extern", "var", "universal"], answer: 0 },
+      { q: "Operator for identity?", options: ["is", "==", "equals", "==="], answer: 0 }
+    ];
+
+    // ✅ Randomly Pick 10
+    const selected = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    const quizContainer = document.getElementById("quiz-container");
+
+    selected.forEach((q, index) => {
+      let html = `<div class="question">
+        <p>${index + 1}. ${q.q}</p>
+        <div class="options">`;
+
+      q.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+      });
+
+      html += `</div></div>`;
+      quizContainer.innerHTML += html;
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      let resultHTML = "<h2>Your Results:</h2>";
+
+      selected.forEach((q, index) => {
+        const answer = document.querySelector(`input[name="q${index}"]:checked`);
+        if (answer && parseInt(answer.value) === q.answer) {
+          score++;
+          resultHTML += `<p class="correct">✔ ${index + 1}. ${q.q} — Correct</p>`;
+        } else {
+          resultHTML += `<p class="wrong">✘ ${index + 1}. ${q.q} — Correct Answer: ${q.options[q.answer]}</p>`;
+        }
+      });
+
+      document.getElementById("result").innerHTML =
+        `🎉 You scored ${score} / ${selected.length}<br>` + resultHTML;
+    }
+  </script>
+</body>
+</html>
