@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(-45deg, #ff512f, #dd2476, #24c6dc, #514a9d);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      color: #fff;
+      text-align: center;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      text-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    #userEmail {
+      margin-bottom: 30px;
+      font-size: 1rem;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .quiz-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+      width: 85%;
+      max-width: 900px;
+    }
+
+    .quiz-btn {
+      padding: 18px;
+      border: none;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+      backdrop-filter: blur(10px);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .quiz-btn:hover {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      transform: translateY(-6px) scale(1.05);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+    }
+
+    .logout-btn {
+      margin-top: 40px;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: 0.3s ease;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-5px);
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0px); } 
+    }
+  </style>
+</head>
+<body>
+  <h1>🔥 Welcome to the Quiz Dashboard</h1>
+  <p id="userEmail">user@example.com</p>
+
+  <div class="quiz-container">
+    <button class="quiz-btn" onclick="location.href='html.html'">HTML</button>
+    <button class="quiz-btn" onclick="location.href='css.html'">CSS</button>
+    <button class="quiz-btn" onclick="location.href='javascript.html'">JavaScript</button>
+    <button class="quiz-btn" onclick="location.href='python.html'">Python</button>
+    <button class="quiz-btn" onclick="location.href='c.html'">C</button>
+    <button class="quiz-btn" onclick="location.href='java.html'">Java</button>
+    <button class="quiz-btn" onclick="location.href='kotlin.html'">Kotlin</button>
+    <button class="quiz-btn" onclick="location.href='php.html'">Php</button>
+    <button class="quiz-btn" onclick="location.href='mysql.html'">Mysql</button>
+    <button class="quiz-btn" onclick="location.href='c++.html'">C++</button>
+  </div>
+
+  <button class="logout-btn" onclick="logout()">Logout</button>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
