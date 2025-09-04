@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Quiz</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      color: #ffeb3b;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    }
+
+    #quiz-container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 22px;
+      border-radius: 16px;
+      margin: 18px 0;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      transition: transform 0.3s ease;
+    }
+
+    .question:hover {
+      transform: translateY(-4px);
+    }
+
+    .question p {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+      font-weight: bold;
+      color: #ffeb3b;
+    }
+
+    .options label {
+      display: block;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .options label:hover {
+      background: rgba(255, 235, 59, 0.3);
+      color: #000;
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 25px;
+      padding: 14px 40px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #dd2476, #ff512f);
+      transform: scale(1.05);
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      text-align: left;
+      padding: 20px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .correct {
+      color: #76ff03;
+      font-weight: bold;
+    }
+
+    .wrong {
+      color: #ff5252;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚡ JavaScript Quiz ⚡</h1>
+  <div id="quiz-container"></div>
+  <button class="submit-btn" onclick="submitQuiz()">Submit</button>
+  <div id="result"></div>
+
+  <script>
+    // ✅ JavaScript Question Pool (expandable to 50)
+    const questions = [
+      { q: "Which type of language is JavaScript?", options: ["Compiled", "Interpreted", "Both", "None"], answer: 1 },
+      { q: "Inside which HTML element do we put JavaScript?", options: ["<js>", "<scripting>", "<script>", "<javascript>"], answer: 2 },
+      { q: "How do you write 'Hello World' in an alert box?", options: ["alert('Hello World');", "msg('Hello World');", "prompt('Hello World');", "msgBox('Hello World');"], answer: 0 },
+      { q: "Which symbol is used for comments in JS?", options: ["//", "/* */", "#", "<!-- -->"], answer: 0 },
+      { q: "Which company developed JavaScript?", options: ["Microsoft", "Netscape", "Google", "Oracle"], answer: 1 },
+      { q: "How do you create a function in JS?", options: ["function myFunc()", "func myFunc()", "def myFunc()", "function:myFunc()"], answer: 0 },
+      { q: "Which keyword declares a variable?", options: ["var", "let", "const", "All of the above"], answer: 3 },
+      { q: "Which operator is used to assign a value?", options: ["=", "==", "===", ":"], answer: 0 },
+      { q: "What is the output of '2' + 2 in JS?", options: ["22", "4", "Error", "NaN"], answer: 0 },
+      { q: "Which method converts JSON to object?", options: ["JSON.stringify()", "JSON.parse()", "toObject()", "parse.JSON()"], answer: 1 },
+      { q: "Which event occurs when a user clicks a button?", options: ["onmouseclick", "onmouseover", "onchange", "onclick"], answer: 3 },
+      { q: "How do you write an IF statement in JS?", options: ["if i=5", "if(i==5)", "if i==5 then", "if i=5 then"], answer: 1 },
+      { q: "Which operator checks value & type?", options: ["=", "==", "===", "!=="], answer: 2 },
+      { q: "How do you write a loop that executes 5 times?", options: ["for(let i=0;i<5;i++)", "for(i<5)", "repeat(5)", "loop(5)"], answer: 0 },
+      { q: "What is the default value of uninitialized variables?", options: ["null", "0", "undefined", "NaN"], answer: 2 },
+      { q: "Which function is used to print in console?", options: ["print()", "console.log()", "echo()", "log()"], answer: 1 },
+      { q: "Which array method adds an element at the end?", options: ["push()", "pop()", "shift()", "unshift()"], answer: 0 },
+      { q: "Which array method removes the last element?", options: ["push()", "pop()", "shift()", "splice()"], answer: 1 },
+      { q: "Which statement handles errors?", options: ["try-catch", "error-catch", "throw-catch", "catch-error"], answer: 0 },
+      { q: "Which keyword stops a loop?", options: ["exit", "stop", "break", "halt"], answer: 2 },
+      // 🔥 Extend list to reach 50
+    ];
+
+    // ✅ Pick 10 random questions
+    const selected = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    const quizContainer = document.getElementById("quiz-container");
+
+    selected.forEach((q, index) => {
+      let html = `<div class="question">
+        <p>${index + 1}. ${q.q}</p>
+        <div class="options">`;
+
+      q.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+      });
+
+      html += `</div></div>`;
+      quizContainer.innerHTML += html;
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      let resultHTML = "<h2>Your Results:</h2>";
+
+      selected.forEach((q, index) => {
+        const answer = document.querySelector(`input[name="q${index}"]:checked`);
+        if (answer && parseInt(answer.value) === q.answer) {
+          score++;
+          resultHTML += `<p class="correct">✔ ${index + 1}. ${q.q} — Correct</p>`;
+        } else {
+          resultHTML += `<p class="wrong">✘ ${index + 1}. ${q.q} — Correct Answer: ${q.options[q.answer]}</p>`;
+        }
+      });
+
+      document.getElementById("result").innerHTML =
+        `🎉 You scored ${score} / ${selected.length}<br>` + resultHTML;
+    }
+  </script>
+</body>
+</html>
