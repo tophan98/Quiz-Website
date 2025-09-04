@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kotlin Quiz</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 30px;
+      background: linear-gradient(-45deg, #667eea, #764ba2, #ff758c, #ff7eb3);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    #quiz-container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 20px;
+      border-radius: 14px;
+      margin: 18px 0;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
+      transition: 0.3s ease;
+    }
+
+    .question:hover {
+      transform: translateY(-3px);
+    }
+
+    .question p {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .options label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .options label:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 25px;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #0072ff, #00c6ff);
+      transform: translateY(-4px);
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      text-align: left;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.35);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .correct {
+      color: #00ff99;
+    }
+
+    .wrong {
+      color: #ff4c4c;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Kotlin Quiz</h1>
+  <div id="quiz-container"></div>
+  <button class="submit-btn" onclick="submitQuiz()">Submit</button>
+  <div id="result"></div>
+
+  <script>
+    // ✅ 50 Kotlin Questions
+    const questions = [
+      { q: "Who developed Kotlin?", options: ["Google", "JetBrains", "Microsoft", "Oracle"], answer: 1 },
+      { q: "Kotlin runs on which platform?", options: [".NET", "JVM", "Node.js", "Python"], answer: 1 },
+      { q: "What is the file extension of Kotlin?", options: [".kot", ".kt", ".kotlin", ".java"], answer: 1 },
+      { q: "Is Kotlin statically typed?", options: ["Yes", "No"], answer: 0 },
+      { q: "Which keyword is used to declare a variable in Kotlin?", options: ["let/var", "val/var", "define", "dim"], answer: 1 },
+      { q: "What is 'val' in Kotlin?", options: ["Mutable variable", "Immutable variable", "Class name", "Package"], answer: 1 },
+      { q: "Which function is the entry point in Kotlin?", options: ["start()", "run()", "main()", "execute()"], answer: 2 },
+      { q: "Which operator is used for string templates?", options: ["$", "#", "%", "&"], answer: 0 },
+      { q: "How do you define a function in Kotlin?", options: ["fun myFunc()", "function myFunc()", "def myFunc()", "func myFunc()"], answer: 0 },
+      { q: "Which visibility modifier is default in Kotlin?", options: ["private", "public", "protected", "internal"], answer: 1 },
+      { q: "What is a data class in Kotlin?", options: ["Class with no methods", "Class for holding data", "Abstract class", "Utility class"], answer: 1 },
+      { q: "Which keyword is used to inherit a class in Kotlin?", options: ["extends", "inherits", ":", "super"], answer: 2 },
+      { q: "What is the supertype of all classes in Kotlin?", options: ["Any", "Object", "Base", "Super"], answer: 0 },
+      { q: "Which function is used to print in Kotlin?", options: ["console.log()", "print()", "echo()", "printf()"], answer: 1 },
+      { q: "What is Elvis operator in Kotlin?", options: ["?:", "??", "::", "->"], answer: 0 },
+      { q: "How to declare a nullable variable?", options: ["var x: Int", "var x: Int?", "nullable Int", "val x"], answer: 1 },
+      { q: "Which collection is immutable?", options: ["ArrayList", "MutableList", "listOf()", "HashMap"], answer: 2 },
+      { q: "What does 'sealed class' mean?", options: ["Cannot be subclassed", "Limited subclassing", "Abstract only", "Final class"], answer: 1 },
+      { q: "Which scope function returns the object itself?", options: ["let", "apply", "run", "with"], answer: 1 },
+      { q: "Which coroutine builder launches a new coroutine?", options: ["launch", "start", "create", "execute"], answer: 0 },
+      { q: "What does 'suspend' keyword mean?", options: ["Pauses a function", "Stops execution", "Used for coroutines", "Asynchronous"], answer: 2 },
+      { q: "Which function is used to iterate a list?", options: ["forEach", "loop", "each", "repeat"], answer: 0 },
+      { q: "What keyword is used to create an object?", options: ["new", "object", "instance", "create"], answer: 1 },
+      { q: "What does 'inline' function mean?", options: ["Function in one line", "Compiler inlines code", "Lambda only", "Static method"], answer: 1 },
+      { q: "Which is a higher-order function?", options: ["Takes function as parameter", "Returns a string", "Has loops", "Static"], answer: 0 },
+      { q: "What does '=='' check in Kotlin?", options: ["Reference equality", "Structural equality", "Both", "None"], answer: 1 },
+      { q: "What does '===' check?", options: ["Value equality", "Reference equality", "Boolean", "None"], answer: 1 },
+      { q: "Which keyword makes a class immutable?", options: ["const", "final", "data", "sealed"], answer: 1 },
+      { q: "What is a companion object?", options: ["Singleton inside a class", "Static variable", "Helper class", "Enum"], answer: 0 },
+      { q: "How do you declare an array?", options: ["array()", "arrayOf()", "listOf()", "ArrayList()"], answer: 1 },
+      { q: "Which keyword is used for exception handling?", options: ["try-catch", "exception", "handle", "error"], answer: 0 },
+      { q: "Which function closes resources automatically?", options: ["use()", "close()", "stop()", "end()"], answer: 0 },
+      { q: "Which is NOT a Kotlin feature?", options: ["Null safety", "Smart casts", "Manual memory management", "Extension functions"], answer: 2 },
+      { q: "What does 'by lazy' do?", options: ["Late init", "Lazy initialization", "Fast execution", "Cache"], answer: 1 },
+      { q: "Which collection guarantees unique elements?", options: ["List", "Set", "Array", "Map"], answer: 1 },
+      { q: "Which type alias is correct?", options: ["typealias MyInt = Int", "alias MyInt = Int", "typedef MyInt Int", "using MyInt = Int"], answer: 0 },
+      { q: "What is the return type of Unit?", options: ["void", "Unit", "null", "Any"], answer: 1 },
+      { q: "Which is a correct lambda syntax?", options: ["{x -> x+1}", "(x) => x+1", "lambda(x):x+1", "fun(x) => x+1"], answer: 0 },
+      { q: "What is an inline class?", options: ["Single value wrapper", "Data class", "Utility", "Static"], answer: 0 },
+      { q: "What does 'tailrec' mean?", options: ["Tail recursion optimization", "End of loop", "Final function", "Static recursion"], answer: 0 },
+      { q: "What is the difference between var and val?", options: ["Both immutable", "val is immutable, var is mutable", "Both mutable", "None"], answer: 1 },
+      { q: "Which IDE is best for Kotlin?", options: ["Visual Studio", "IntelliJ IDEA", "Eclipse", "NetBeans"], answer: 1 },
+      { q: "Can Kotlin be compiled to JavaScript?", options: ["Yes", "No"], answer: 0 },
+      { q: "Can Kotlin be used for Android?", options: ["Yes", "No"], answer: 0 },
+      { q: "Which version of Android first supported Kotlin?", options: ["Nougat", "Oreo", "Pie", "Marshmallow"], answer: 1 },
+      { q: "Which keyword prevents inheritance?", options: ["sealed", "abstract", "final", "const"], answer: 2 },
+      { q: "What is the base class for exceptions?", options: ["Exception", "Throwable", "Error", "RuntimeException"], answer: 1 },
+      { q: "Which operator is used for safe calls?", options: ["?.", "::", "!!", "??"], answer: 0 },
+      { q: "What does '!!' mean in Kotlin?", options: ["Safe call", "Not null assertion", "Null check", "Ignore"], answer: 1 },
+      { q: "What is the default visibility of top-level functions?", options: ["public", "private", "internal", "protected"], answer: 0 },
+      { q: "What is Smart Cast?", options: ["Automatic type cast after check", "Manual cast", "Force casting", "Safe casting only"], answer: 0 }
+    ];
+
+    // ✅ Pick 10 random questions
+    const selected = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    const quizContainer = document.getElementById("quiz-container");
+
+    selected.forEach((q, index) => {
+      let html = `<div class="question">
+        <p>${index + 1}. ${q.q}</p>
+        <div class="options">`;
+
+      q.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+      });
+
+      html += `</div></div>`;
+      quizContainer.innerHTML += html;
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      let resultHTML = "<h2>Your Results:</h2>";
+
+      selected.forEach((q, index) => {
+        const answer = document.querySelector(`input[name="q${index}"]:checked`);
+        if (answer && parseInt(answer.value) === q.answer) {
+          score++;
+          resultHTML += `<p class="correct">✔ ${index + 1}. ${q.q} — Correct</p>`;
+        } else {
+          resultHTML += `<p class="wrong">✘ ${index + 1}. ${q.q} — Correct Answer: ${q.options[q.answer]}</p>`;
+        }
+      });
+
+      document.getElementById("result").innerHTML =
+        `🎉 You scored ${score} / ${selected.length}<br><br>` + resultHTML;
+    }
+  </script>
+</body>
+</html>
