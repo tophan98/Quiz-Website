@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ Quiz</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+      animation: fadeInDown 1s ease;
+    }
+
+    #quiz-container {
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 20px;
+      border-radius: 14px;
+      margin: 18px 0;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+      transition: 0.3s ease;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .question:hover {
+      transform: translateY(-3px);
+    }
+
+    .question p {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+    }
+
+    .options label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .options label:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 25px;
+      padding: 15px 35px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      animation: fadeInUp 1s ease;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #dd2476, #ff512f);
+      transform: translateY(-3px);
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.3);
+      animation: fadeIn 1s ease;
+    }
+
+    .correct { color: #00ff99; }
+    .wrong { color: #ff4c4c; }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1>💻 C++ Quiz</h1>
+  <div id="quiz-container"></div>
+  <button class="submit-btn" onclick="submitQuiz()">Submit</button>
+  <div id="result"></div>
+
+  <script>
+    // ✅ 50 C++ Questions
+    const questions = [
+      { q: "Who developed C++?", options: ["Dennis Ritchie", "Bjarne Stroustrup", "James Gosling", "Guido van Rossum"], answer: 1 },
+      { q: "C++ is a ___ language?", options: ["High-level", "Low-level", "Assembly", "Machine"], answer: 0 },
+      { q: "Which symbol is used to end a statement in C++?", options: [".", ";", ":", "#"], answer: 1 },
+      { q: "Which operator is used for input in C++?", options: ["<<", ">>", "::", "**"], answer: 1 },
+      { q: "Which operator is used for output in C++?", options: ["<<", ">>", "::", "**"], answer: 0 },
+      { q: "Which header file is required for cin and cout?", options: ["<iostream>", "<stdio.h>", "<stdlib.h>", "<conio.h>"], answer: 0 },
+      { q: "Which keyword is used to define a class?", options: ["object", "struct", "class", "define"], answer: 2 },
+      { q: "Which keyword is used to inherit a class?", options: ["extends", "inherits", ":", "implements"], answer: 2 },
+      { q: "Which access specifier is default in C++ class?", options: ["public", "private", "protected", "friend"], answer: 1 },
+      { q: "Which function is always executed first in C++?", options: ["start()", "main()", "init()", "first()"], answer: 1 },
+      { q: "Which operator is used to allocate memory dynamically?", options: ["new", "malloc", "alloc", "create"], answer: 0 },
+      { q: "Which operator is used to free memory in C++?", options: ["free", "delete", "remove", "clear"], answer: 1 },
+      { q: "Which feature of OOP allows reusing code?", options: ["Polymorphism", "Inheritance", "Encapsulation", "Abstraction"], answer: 1 },
+      { q: "Which feature allows function overloading?", options: ["Encapsulation", "Polymorphism", "Inheritance", "Abstraction"], answer: 1 },
+      { q: "Which concept hides internal details?", options: ["Encapsulation", "Polymorphism", "Inheritance", "Abstraction"], answer: 3 },
+      { q: "Which keyword is used to define a constant?", options: ["constant", "final", "const", "define"], answer: 2 },
+      { q: "Which loop runs at least once?", options: ["for", "while", "do-while", "none"], answer: 2 },
+      { q: "Which operator is used to access members via pointer?", options: [".", "->", "::", "*"], answer: 1 },
+      { q: "Which operator is overloaded by default in C++?", options: ["+", "=", "-", "[]"], answer: 1 },
+      { q: "Which keyword is used for exception handling?", options: ["try", "catch", "throw", "All of these"], answer: 3 },
+      { q: "Which header defines string class?", options: ["<cstring>", "<string>", "<str>", "<stdlib.h>"], answer: 1 },
+      { q: "Which file extension is used for C++?", options: [".c", ".cpp", ".cp", ".cxx"], answer: 1 },
+      { q: "Which keyword is used to prevent inheritance?", options: ["stop", "final", "sealed", "lock"], answer: 1 },
+      { q: "Which operator cannot be overloaded?", options: ["+", "=", "?", "sizeof"], answer: 3 },
+      { q: "Which keyword allocates memory on heap?", options: ["malloc", "calloc", "new", "create"], answer: 2 },
+      { q: "Which keyword releases memory?", options: ["delete", "remove", "free", "destroy"], answer: 0 },
+      { q: "Which is the correct comment in C++?", options: ["// comment", "/* comment */", "# comment", "Both // and /* */"], answer: 3 },
+      { q: "Which keyword is used to define namespace?", options: ["namespace", "package", "module", "define"], answer: 0 },
+      { q: "Which keyword is used to return value?", options: ["break", "return", "exit", "continue"], answer: 1 },
+      { q: "Which operator is used for scope resolution?", options: ["::", ".", "->", ":"], answer: 0 },
+      { q: "Which function clears the screen in C++ (Turbo)?", options: ["clrscr()", "clear()", "reset()", "refresh()"], answer: 0 },
+      { q: "Which keyword is used to declare a virtual function?", options: ["virtual", "override", "function", "dynamic"], answer: 0 },
+      { q: "Which operator has highest precedence?", options: ["*", "++", "()", "&&"], answer: 2 },
+      { q: "Which function is used to terminate a program?", options: ["stop()", "end()", "exit()", "break()"], answer: 2 },
+      { q: "Which header file is required for sqrt()?", options: ["<math.h>", "<cmath>", "<stdio.h>", "<stdlib.h>"], answer: 1 },
+      { q: "Which keyword is used for multiple inheritance?", options: ["multi", "extends", ":", "inherits"], answer: 2 },
+      { q: "Which data type is used for decimal numbers?", options: ["int", "float", "char", "bool"], answer: 1 },
+      { q: "Which operator is used to find remainder?", options: ["/", "%", "//", "mod"], answer: 1 },
+      { q: "Which data type stores true/false?", options: ["int", "bool", "logical", "binary"], answer: 1 },
+      { q: "Which function is called constructor?", options: ["Class name()", "init()", "create()", "new()"], answer: 0 },
+      { q: "Which function is called destructor?", options: ["~ClassName()", "delete()", "destroy()", "free()"], answer: 0 },
+      { q: "Which keyword defines template?", options: ["template", "generic", "typename", "Both template & typename"], answer: 3 },
+      { q: "Which function opens a file?", options: ["fopen()", "open()", "fstream.open()", "file()"], answer: 2 },
+      { q: "Which function closes a file?", options: ["close()", "fclose()", "file.close()", "All of these"], answer: 3 },
+      { q: "Which keyword makes variable unchangeable?", options: ["const", "final", "static", "lock"], answer: 0 },
+      { q: "Which type of casting is safer?", options: ["dynamic_cast", "reinterpret_cast", "static_cast", "const_cast"], answer: 0 },
+      { q: "Which function allocates array dynamically?", options: ["new[]", "malloc[]", "alloc[]", "create[]"], answer: 0 },
+      { q: "Which function deallocates dynamic array?", options: ["delete[]", "free[]", "destroy[]", "remove[]"], answer: 0 },
+      { q: "Which loop is entry-controlled?", options: ["do-while", "for", "while", "Both for and while"], answer: 3 },
+      { q: "Which keyword is used to stop loop?", options: ["break", "exit", "stop", "halt"], answer: 0 }
+    ];
+
+    // ✅ Pick 10 Random Questions
+    const selected = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    const quizContainer = document.getElementById("quiz-container");
+
+    selected.forEach((q, index) => {
+      let html = `<div class="question">
+        <p>${index + 1}. ${q.q}</p>
+        <div class="options">`;
+
+      q.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+      });
+
+      html += `</div></div>`;
+      quizContainer.innerHTML += html;
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      let resultHTML = "<h2>Your Results:</h2>";
+
+      selected.forEach((q, index) => {
+        const answer = document.querySelector(`input[name="q${index}"]:checked`);
+        if (answer && parseInt(answer.value) === q.answer) {
+          score++;
+          resultHTML += `<p class="correct">✔ ${index + 1}. ${q.q} — Correct</p>`;
+        } else {
+          resultHTML += `<p class="wrong">✘ ${index + 1}. ${q.q} — Correct Answer: ${q.options[q.answer]}</p>`;
+        }
+      });
+
+      document.getElementById("result").innerHTML =
+        `🎉 You scored ${score} / ${selected.length}<br>` + resultHTML;
+    }
+  </script>
+</body>
+</html>
