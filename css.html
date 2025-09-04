@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Quiz</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    }
+
+    #quiz-container {
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 20px;
+      border-radius: 14px;
+      margin: 18px 0;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+      transition: 0.3s ease;
+    }
+
+    .question:hover {
+      transform: translateY(-3px);
+    }
+
+    .question p {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+    }
+
+    .options label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .options label:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 25px;
+      padding: 15px 35px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #0072ff, #00c6ff);
+      transform: translateY(-3px);
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .correct {
+      color: #00ff99;
+    }
+
+    .wrong {
+      color: #ff4c4c;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 CSS Quiz</h1>
+  <div id="quiz-container"></div>
+  <button class="submit-btn" onclick="submitQuiz()">Submit</button>
+  <div id="result"></div>
+
+  <script>
+    // ✅ CSS Question Pool (add up to 50)
+    const questions = [
+      { q: "What does CSS stand for?", options: ["Cascading Style Sheets", "Computer Style Sheets", "Creative Style Syntax", "Control Style System"], answer: 0 },
+      { q: "Which property is used to change text color?", options: ["font-color", "color", "text-color", "style"], answer: 1 },
+      { q: "Which CSS property controls text size?", options: ["font-size", "text-style", "text-size", "font-weight"], answer: 0 },
+      { q: "How do you select an element with id 'header'?", options: ["#header", ".header", "header", "*header"], answer: 0 },
+      { q: "Which property is used to change background color?", options: ["background-color", "bgcolor", "color-background", "background"], answer: 0 },
+      { q: "Which is the correct CSS syntax?", options: ["body {color: black;}", "{body:color=black;}", "body:color=black;", "body {color=black;}"], answer: 0 },
+      { q: "How do you insert a comment in CSS?", options: ["/* comment */", "// comment", "<!-- comment -->", "# comment"], answer: 0 },
+      { q: "Which property controls bold text?", options: ["font-weight", "font-style", "text-bold", "bold"], answer: 0 },
+      { q: "Which property controls italic text?", options: ["font-style", "font-variant", "font-italic", "text-italic"], answer: 0 },
+      { q: "How do you select all p elements inside a div?", options: ["div p", "div.p", "div-p", "p div"], answer: 0 },
+      { q: "What is the default position property in CSS?", options: ["static", "relative", "absolute", "fixed"], answer: 0 },
+      { q: "Which CSS property is used to set space inside an element?", options: ["padding", "margin", "spacing", "border"], answer: 0 },
+      { q: "Which CSS property is used to set space outside an element?", options: ["margin", "padding", "spacing", "border"], answer: 0 },
+      { q: "How do you make text uppercase in CSS?", options: ["text-transform: uppercase;", "font-case: upper;", "text-style: uppercase;", "transform: upper;"], answer: 0 },
+      { q: "Which property is used to underline text?", options: ["text-decoration", "font-decoration", "text-style", "underline"], answer: 0 },
+      // 🔥 Add more until 50
+    ];
+
+    // ✅ Randomly Pick 10
+    const selected = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    const quizContainer = document.getElementById("quiz-container");
+
+    selected.forEach((q, index) => {
+      let html = `<div class="question">
+        <p>${index + 1}. ${q.q}</p>
+        <div class="options">`;
+
+      q.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+      });
+
+      html += `</div></div>`;
+      quizContainer.innerHTML += html;
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      let resultHTML = "<h2>Your Results:</h2>";
+
+      selected.forEach((q, index) => {
+        const answer = document.querySelector(`input[name="q${index}"]:checked`);
+        if (answer && parseInt(answer.value) === q.answer) {
+          score++;
+          resultHTML += `<p class="correct">✔ ${index + 1}. ${q.q} — Correct</p>`;
+        } else {
+          resultHTML += `<p class="wrong">✘ ${index + 1}. ${q.q} — Correct Answer: ${q.options[q.answer]}</p>`;
+        }
+      });
+
+      document.getElementById("result").innerHTML =
+        `🎉 You scored ${score} / ${selected.length}<br>` + resultHTML;
+    }
+  </script>
+</body>
+</html>
