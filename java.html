@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Java Quiz</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ff6a00, #ee0979);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    }
+
+    #quiz-container {
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 20px;
+      border-radius: 14px;
+      margin: 18px 0;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+      transition: 0.3s ease;
+    }
+
+    .question:hover {
+      transform: translateY(-3px);
+    }
+
+    .question p {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+    }
+
+    .options label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .options label:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 25px;
+      padding: 15px 35px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #0072ff, #00c6ff);
+      transform: translateY(-3px);
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .correct {
+      color: #00ff99;
+    }
+
+    .wrong {
+      color: #ff4c4c;
+    }
+  </style>
+</head>
+<body>
+  <h1>☕ Java Quiz</h1>
+  <div id="quiz-container"></div>
+  <button class="submit-btn" onclick="submitQuiz()">Submit</button>
+  <div id="result"></div>
+
+  <script>
+    // ✅ Java Questions Pool (50 total, sample below)
+    const questions = [
+      { q: "Who invented Java Programming?", options: ["Guido van Rossum", "James Gosling", "Dennis Ritchie", "Bjarne Stroustrup"], answer: 1 },
+      { q: "Which company developed Java?", options: ["Sun Microsystems", "Microsoft", "Apple", "IBM"], answer: 0 },
+      { q: "Which year was Java released?", options: ["1991", "1995", "2000", "1985"], answer: 1 },
+      { q: "Which keyword is used to inherit a class in Java?", options: ["super", "this", "extends", "inherits"], answer: 2 },
+      { q: "Which method is the entry point of Java program?", options: ["start()", "main()", "init()", "run()"], answer: 1 },
+      { q: "Which of these is not a Java feature?", options: ["Object-Oriented", "Use of pointers", "Portable", "Robust"], answer: 1 },
+      { q: "Which of these is a reserved keyword in Java?", options: ["goto", "constant", "true", "var"], answer: 0 },
+      { q: "Which data type is used to store true/false?", options: ["int", "boolean", "char", "bit"], answer: 1 },
+      { q: "Which operator is used for object reference comparison?", options: ["==", "equals()", "compareTo()", "==="], answer: 0 },
+      { q: "Which package contains the Scanner class?", options: ["java.util", "java.io", "java.net", "java.lang"], answer: 0 },
+      { q: "Which keyword is used to prevent inheritance?", options: ["static", "final", "const", "sealed"], answer: 1 },
+      { q: "Which keyword is used to define an interface?", options: ["class", "interface", "abstract", "implements"], answer: 1 },
+      { q: "Which operator is used for multiplication?", options: ["*", "x", "×", "mul"], answer: 0 },
+      { q: "Which class is the parent of all classes in Java?", options: ["System", "Object", "Class", "Base"], answer: 1 },
+      { q: "Which keyword is used to inherit interfaces?", options: ["extends", "implements", "inherits", "interface"], answer: 1 },
+      { q: "Which loop is guaranteed to run at least once?", options: ["for", "while", "do-while", "foreach"], answer: 2 },
+      { q: "Which operator is used for division remainder?", options: ["%", "/", "mod", "//"], answer: 0 },
+      { q: "Which keyword is used to define a constant variable?", options: ["static", "final", "const", "constant"], answer: 1 },
+      { q: "Which collection class allows duplicates?", options: ["Set", "Map", "List", "HashSet"], answer: 2 },
+      { q: "Which method is used to start a thread?", options: ["run()", "execute()", "start()", "begin()"], answer: 2 },
+      // 🔥 Add more until 50
+    ];
+
+    // ✅ Randomly Pick 10 Questions
+    const selected = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+    const quizContainer = document.getElementById("quiz-container");
+
+    selected.forEach((q, index) => {
+      let html = `<div class="question">
+        <p>${index + 1}. ${q.q}</p>
+        <div class="options">`;
+
+      q.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`;
+      });
+
+      html += `</div></div>`;
+      quizContainer.innerHTML += html;
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      let resultHTML = "<h2>Your Results:</h2>";
+
+      selected.forEach((q, index) => {
+        const answer = document.querySelector(`input[name="q${index}"]:checked`);
+        if (answer && parseInt(answer.value) === q.answer) {
+          score++;
+          resultHTML += `<p class="correct">✔ ${index + 1}. ${q.q} — Correct</p>`;
+        } else {
+          resultHTML += `<p class="wrong">✘ ${index + 1}. ${q.q} — Correct Answer: ${q.options[q.answer]}</p>`;
+        }
+      });
+
+      document.getElementById("result").innerHTML =
+        `🎉 You scored ${score} / ${selected.length}<br>` + resultHTML;
+    }
+  </script>
+</body>
+</html>
