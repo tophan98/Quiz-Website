@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz App - Home</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #ff512f, #dd2476, #24c6dc, #514a9d);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .wrapper {
+      text-align: center;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 50px 40px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(12px);
+      animation: fadeIn 1.5s ease;
+      max-width: 450px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .title {
+      font-size: 2.7rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: #fff;
+      text-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 40px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .btn {
+      text-decoration: none;
+      padding: 14px 30px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      transition: 0.3s ease;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .btn.secondary {
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+    }
+
+    .btn.secondary:hover {
+      transform: translateY(-4px);
+    }
+
+    /* Floating animation */
+    .card {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+</head>
+<body>  
+  <div class="wrapper">
+    <div class="card">
+      <h1 class="title">🔥 Quiz Master</h1>
+      <p class="subtitle">Test your knowledge & challenge yourself!</p>
+      <div class="actions">
+        <a href="login.html" class="btn">Sign In</a>
+        <a href="signup.html" class="btn secondary">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
